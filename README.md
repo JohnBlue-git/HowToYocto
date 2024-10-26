@@ -273,6 +273,18 @@ then build the image ...
 bibake core-image-minimal
 ```
 
+## To advance with classes:
+1. **Inheritance**:
+    - To use a **`.bbclass`** file, a recipe simply needs to inherit the class. In most cases, inheriting the class is enough to enable its features.
+    - Recipes can inherit multiple classes, allowing them to combine functionalities from different **`.bbclass`** files.
+2. **Class Locations**:
+    - **`.bbclass`** files are identified by their extension and are usually placed in specific subdirectories beneath the **`meta*/`** directory in the source directory:
+        - **`classes-recipe/`**: Classes intended to be inherited by recipes individually.
+        - **`classes-global/`**: Classes intended to be inherited globally.
+        - **`classes/`**: Classes whose usage context is not clearly defined.
+For instance, **cmake.bbclass** have already defined process for a noremal cmake build. When receipe's .bb file need to handle normal cmake build, we can use **inherit cmake** to use it.
+For instance, **.bbclass** can also add **IMAGE_INSTALL:append** with the components that we want to install, and it can it inherited and shared accross all the receipes within the same directory.
+
 ## Be aware of .gitignore when work with git
 .gitignore
 ```console
@@ -290,21 +302,9 @@ We can also use --force to add changes
 git add --force poky/meta-application
 ```
 
-## reference
+## My references
 https://kickstartembedded.com/2022/02/28/yocto-part-9-customising-images-by-adding-your-recipes/
 https://docs.yoctoproject.org/dev/dev-manual/customizing-images.html
-
-Advance with classes:
-1. **Inheritance**:
-    - To use a **`.bbclass`** file, a recipe simply needs to inherit the class. In most cases, inheriting the class is enough to enable its features.
-    - Recipes can inherit multiple classes, allowing them to combine functionalities from different **`.bbclass`** files.
-2. **Class Locations**:
-    - **`.bbclass`** files are identified by their extension and are usually placed in specific subdirectories beneath the **`meta*/`** directory in the source directory:
-        - **`classes-recipe/`**: Classes intended to be inherited by recipes individually.
-        - **`classes-global/`**: Classes intended to be inherited globally.
-        - **`classes/`**: Classes whose usage context is not clearly defined.
-For instance, **cmake.bbclass** have already defined process for a noremal cmake build. When receipe's .bb file need to handle normal cmake build, we can use **inherit cmake** to use it.
-For instance, **.bbclass** can also add **IMAGE_INSTALL:append** with the components that we want to install, and it can it inherited and shared accross all the receipes within the same directory.
 
 ## To be continue ...
 
