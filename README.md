@@ -273,6 +273,23 @@ then build the image ...
 bibake core-image-minimal
 ```
 
+## Be aware of .gitignore when work with git
+.gitignore
+```console
+# to exclude from adding into git
+meta-*/
+
+# enforce git to monitor the change
+!meta-poky
+!meta-yocto
+!meta-yocto-bsp
+!meta-yocto-imported
+```
+We can also use --force to add changes
+```console
+git add --force poky/meta-application
+```
+
 ## reference
 https://kickstartembedded.com/2022/02/28/yocto-part-9-customising-images-by-adding-your-recipes/
 https://docs.yoctoproject.org/dev/dev-manual/customizing-images.html
