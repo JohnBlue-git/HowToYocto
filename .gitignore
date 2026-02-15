@@ -1,0 +1,42 @@
+# Ignore repo internal directories
+.repo/projects/
+.repo/project-objects/
+.repo/worktrees/
+.repo/logs/
+
+# Ignore poky - will be cloned via repo manifest
+poky/
+
+# Ignore build artifacts (created locally by bitbake)
+build/
+
+# Common Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Virtual environments
+venv/
+env/
+ENV/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Generated files
+*.log
+*.tmp
