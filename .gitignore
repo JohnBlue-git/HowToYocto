@@ -1,8 +1,5 @@
-# Ignore repo internal directories
-.repo/projects/
-.repo/project-objects/
-.repo/worktrees/
-.repo/logs/
+# Ignore entire .repo directory (will be created by repo init)
+.repo/
 
 # Ignore poky - will be cloned via repo manifest
 poky/
