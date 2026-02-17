@@ -1,14 +1,15 @@
 #!/bin/bash
 #
-# Setup Yocto Build Environment with Auto Layer Addition
+# Setup Yocto Build Environment with Auto Layer Addition & Thread Configuration
 # 
 # Usage: source setup-build-env.sh
 # 
 # This script:
 # 1. Checks if we're in the correct workspace
 # 2. Sources the Yocto environment
-# 3. Automatically adds the meta-application layer if not already present
-# 4. Verifies the layer is properly configured
+# 3. Automatically configures bitbake thread settings for optimal performance
+# 4. Automatically adds the meta-application layer if not already present
+# 5. Verifies the layer is properly configured
 #
 
 set -e
@@ -44,8 +45,29 @@ fi
 echo "   ✓ Environment sourced successfully"
 echo ""
 
+# Configure bitbake thread settings for optimal performance
+echo "2. Configuring bitbake thread settings..."
+
+# Get the number of CPU cores available
+NUM_CORES=$(nproc 2>/dev/null || echo "4")
+# Use number of cores for BB_NUMBER_THREADS and half for PARALLEL_MAKE
+BB_THREADS=$NUM_CORES
+PARALLEL_JOBS=$((NUM_CORES / 2))
+[ $PARALLEL_JOBS -lt 1 ] && PARALLEL_JOBS=1
+
+# Check if BB_NUMBER_THREADS is already configured
+if ! grep -q "^BB_NUMBER_THREADS" conf/local.conf; then
+    echo "# Bitbake Threading Configuration (Auto-configured)" >> conf/local.conf
+    echo "BB_NUMBER_THREADS = \"$BB_THREADS\"" >> conf/local.conf
+    echo "PARALLEL_MAKE = \"-j $PARALLEL_JOBS\"" >> conf/local.conf
+    echo "   ✓ Thread configuration added (BB_NUMBER_THREADS=$BB_THREADS, PARALLEL_MAKE=-j$PARALLEL_JOBS)"
+else
+    echo "   ✓ Thread configuration already present in local.conf"
+fi
+echo ""
+
 # Check if meta-application layer is already added
-echo "2. Checking for meta-application layer..."
+echo "3. Checking for meta-application layer..."
 if bitbake-layers show-layers 2>/dev/null | grep -q "meta-application"; then
     echo "   ✓ meta-application layer already added"
 else
@@ -55,7 +77,7 @@ else
 fi
 
 echo ""
-echo "3. Verifying layer configuration..."
+echo "4. Verifying layer configuration..."
 echo "=========================================="
 bitbake-layers show-layers | grep -E "layer|meta-application|meta-poky|meta-yocto"
 echo "=========================================="
