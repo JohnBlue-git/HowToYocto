@@ -412,6 +412,7 @@ Install the missing tools:
 ```bash
 sudo apt-get update
 sudo apt-get install -y chrpath cpio diffstat
+sudo apt-get install -y zstd libzstd-dev
 ```
 
 For `pzstd` (parallel zstandard compression):
