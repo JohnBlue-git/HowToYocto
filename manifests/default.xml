@@ -2,7 +2,7 @@
 <manifest>
   <!-- Remote definitions -->
   <remote name="yocto" fetch="https://git.yoctoproject.org" />
-  <remote name="origin" fetch="." />
+  <remote name="origin" fetch="https://github.com/JohnBlue-git" />
 
   <!-- Default remote and branch -->
   <default remote="yocto" revision="kirkstone" />
