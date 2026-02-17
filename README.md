@@ -64,6 +64,8 @@ cd ~/yocto-workspace
 repo init -u https://github.com/JohnBlue-git/HowToYocto.git -b main -m manifests/default.xml
 # Download all projects
 repo sync
+# Checkout all as master
+repo start master --all
 ```
 
 ### Project Initialization (Each Time)

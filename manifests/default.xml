@@ -5,10 +5,10 @@
   <remote name="github" fetch="https://github.com/JohnBlue-git" />
 
   <!-- Default remote and branch -->
-  <default remote="yocto" revision="master" />
+  <default remote="yocto" revision="kirkstone" />
 
   <!-- Poky project from Yocto -->
-  <project name="poky" path="poky" remote="yocto" revision="master" />
+  <project name="poky" path="poky" remote="yocto" revision="kirkstone" />
 
   <!-- Meta-application layer from this project -->
   <project name="HowToYocto" path="meta-application" remote="github" revision="main">
