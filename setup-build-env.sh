@@ -59,15 +59,17 @@ echo "2. Configuring bitbake thread settings..."
 NUM_CORES=$(nproc 2>/dev/null || echo "4")
 # Use number of cores for BB_NUMBER_THREADS and half for PARALLEL_MAKE
 BB_THREADS=$NUM_CORES
-PARALLEL_JOBS=$((NUM_CORES * 4))
+PARALLEL_JOBS=$((NUM_CORES * 1))
 [ $PARALLEL_JOBS -lt 1 ] && PARALLEL_JOBS=1
+ZSTD_THREADS=1
 
 # Check if BB_NUMBER_THREADS is already configured
 if ! grep -q "^BB_NUMBER_THREADS" conf/local.conf; then
     echo "# Bitbake Threading Configuration (Auto-configured)" >> conf/local.conf
     echo "BB_NUMBER_THREADS = \"$BB_THREADS\"" >> conf/local.conf
     echo "PARALLEL_MAKE = \"-j $PARALLEL_JOBS\"" >> conf/local.conf
-    echo "   ✓ Thread configuration added (BB_NUMBER_THREADS=$BB_THREADS, PARALLEL_MAKE=-j$PARALLEL_JOBS)"
+    echo "ZSTD_THREADS = \"$ZSTD_THREADS\"" >> conf/local.conf
+    echo "   ✓ Thread configuration added (BB_NUMBER_THREADS=$BB_THREADS, PARALLEL_MAKE=-j$PARALLEL_JOBS, ZSTD_THREADS=$ZSTD_THREADS)"
 else
     echo "   ✓ Thread configuration already present in local.conf"
 fi

@@ -428,6 +428,39 @@ For `pzstd` (parallel zstandard compression):
 
 If `pzstd` is not available in your distribution, the Yocto build should still work with the basic compression tools installed.
 
+### zstd and quilt-native Error
+
+Install the missing tools:
+
+```bash
+sudo apt-get update
+sudo apt-get install -y build-essential chrpath diffstat gawk git texinfo tmux wget zstd liblz4-tool file
+```
+
+What is happening?
+- Yocto is trying to use zstd to compress the build artifacts for quilt-native so it can reuse them later. However, the command is being passed an argument (the number 2) that zstd thinks is a filename, but it's actually a malformed compression level or a missing parameter.
+- In GitHub Codespaces, this is almost always caused by an alias or a non-standard version of zstd or tar installed in the environment that doesn't play nice with how Yocto structures its shell commands.
+
+Fix the zstd Host Tool
+```bash
+sudo apt-get update
+sudo apt-get install --reinstall -y zstd tar
+```
+
+Clear the "Hung" Build State
+```bash
+bitbake -c cleansstate quilt-native gnu-config-native texinfo-dummy-native
+```
+
+Adjust the Compression Threading (The "Codespace Special")
+- Sometimes the way Yocto detects CPU cores in a container causes it to pass a bad number to zstd. Add this to your conf/local.conf to force a standard compression behavior
+```bash
+# Force zstd to use a simple configuration
+BB_NUMBER_THREADS = "2"
+PARALLEL_MAKE = "-j 2"
+ZSTD_THREADS = "1"
+```
+
 ### Bitbake Command Not Found
 
 **Error Message:**
