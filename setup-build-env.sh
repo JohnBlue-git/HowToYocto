@@ -12,16 +12,23 @@
 # 5. Verifies the layer is properly configured
 #
 
-set -e
+# Don't use set -e to prevent early exit on sourced scripts
+# set -e
 
-# Get the script directory
-SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+# Handle both sourcing and direct execution
+if [[ "${BASH_SOURCE[0]}" != "${0}" ]]; then
+    SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+else
+    SCRIPT_DIR="$(pwd)"
+fi
 
 # Check if we can find the workspace structure
 if [ ! -d "$SCRIPT_DIR/.repo" ] || [ ! -d "$SCRIPT_DIR/poky" ] || [ ! -d "$SCRIPT_DIR/meta-application" ]; then
     echo "ERROR: This script must be run from the HowToYocto workspace root directory"
     echo "Current directory: $SCRIPT_DIR"
     echo "Expected to find: .repo/, poky/, and meta-application/ directories"
+    echo ""
+    echo "Usage: cd ~/yocto-workspace && source setup-build-env.sh"
     return 1 2>/dev/null || exit 1
 fi
 
