@@ -38,6 +38,9 @@ echo "=========================================="
 echo "Workspace: $SCRIPT_DIR"
 echo ""
 
+# Ensure we have a clean PATH to avoid conflicts with host tools
+export PATH=/usr/bin:/bin:/usr/sbin:/sbin:$PATH
+
 # Navigate to poky directory
 cd "$SCRIPT_DIR/poky"
 echo "1. Sourcing Yocto environment..."
