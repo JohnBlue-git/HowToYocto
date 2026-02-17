@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<manifest>
+  <!-- Remote definitions -->
+  <remote name="yocto" fetch="https://git.yoctoproject.org" />
+  <remote name="origin" fetch="." />
+
+  <!-- Default remote and branch -->
+  <default remote="yocto" revision="kirkstone" />
+
+  <!-- Poky project from Yocto -->
+  <project name="poky" path="poky" remote="yocto" revision="kirkstone" />
+
+  <!-- Meta-application layer from this project -->
+  <project name="meta-application" path="meta-application" remote="origin" revision="main" />
+</manifest>

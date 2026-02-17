@@ -47,7 +47,7 @@ mkdir -p ~/yocto-workspace
 cd ~/yocto-workspace
 
 # Initialize repo with this project's manifest
-repo init -u https://github.com/JohnBlue-git/HowToYocto.git -b main --repo-url https://gerrit.googlesource.com/git-repo
+repo init -u https://github.com/JohnBlue-git/HowToYocto.git -b main
 
 # Download all projects
 repo sync
