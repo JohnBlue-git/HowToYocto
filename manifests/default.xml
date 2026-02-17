@@ -11,5 +11,7 @@
   <project name="poky" path="poky" remote="yocto" revision="kirkstone" />
 
   <!-- Meta-application layer from this project -->
-  <project name="HowToYocto" path="meta-application" remote="github" revision="main" />
+  <project name="HowToYocto" path="meta-application" remote="github" revision="main">
+    <copyfile src="setup-build-env.sh" dest="setup-build-env.sh" />
+  </project>
 </manifest>

@@ -36,6 +36,20 @@ chmod a+x ~/bin/repo
 # Make sure ~/bin is in your PATH
 ```
 
+### Install Additional Required Tools
+
+If you encounter errors about missing HOSTTOOLS during bitbake build, install:
+
+```bash
+sudo apt-get install -y chrpath cpio diffstat pzstd
+```
+
+**Note:** `pzstd` may not be available in all distributions. As an alternative, you can install `zstandard`:
+
+```bash
+sudo apt-get install -y chrpath cpio diffstat zstandard
+```
+
 ## Setup Project with Repo
 
 ### Initialize Repo Workspace
@@ -54,16 +68,48 @@ repo sync
 
 ### Project Initialization (Each Time)
 
+**Quick Setup (Recommended):**
+
+From the workspace root directory, use the provided setup script:
+
 ```bash
-# Navigate to the workspace (after repo init and repo sync)
 cd ~/yocto-workspace
-
-# Source the Yocto environment from Poky
-cd poky
-source oe-init-build-env build
-
-# Now you're in the build directory - ready to build!
+source setup-build-env.sh
 ```
+
+This script automatically:
+- Sources the Yocto environment
+- Adds the meta-application layer if not already present
+- Verifies the layer configuration
+
+**Manual Setup:**
+
+If you prefer manual setup:
+
+```bash
+cd ~/yocto-workspace/poky
+source oe-init-build-env build
+```
+
+Then add the custom layer:
+
+```bash
+bitbake-layers add-layer ../../meta-application
+```
+
+Verify the layer is added:
+
+```bash
+bitbake-layers show-layers
+```
+
+Expected output should include:
+
+```
+meta-application      ../../meta-application                    6
+```
+
+**Note:** Custom layers must be explicitly added because `oe-init-build-env` only sets up core Poky layers.
 
 ## Building Images
 
@@ -308,6 +354,112 @@ inherit autotools
 - [Creating Recipes](https://kickstartembedded.com/2022/01/21/yocto-part-6-understanding-and-creating-your-first-custom-recipe/)
 - [Raspberry Pi Support](https://kickstartembedded.com/2021/12/22/yocto-part-4-building-a-basic-image-for-raspberry-pi/)
 - [Google Repo Documentation](https://gerrit.googlesource.com/git-repo/+/refs/heads/master/README.md)
+
+## Troubleshooting
+
+### Meta-Application Layer Not Found
+
+**Error Message:**
+```
+ERROR: Nothing PROVIDES 'hello-world-module'
+```
+
+**Cause:**
+
+The `oe-init-build-env` script only automatically adds the core Poky layers (meta, meta-poky, meta-yocto-bsp). Custom layers like `meta-application` must be explicitly added because:
+
+1. **Design Intent**: Yocto allows different projects to use different custom layers
+2. **Flexibility**: You control which layers are included in your build
+3. **Manual Management**: Prevents accidental inclusion of unwanted layers
+
+**Solution:**
+
+Use the provided setup script:
+
+```bash
+cd ~/yocto-workspace
+source setup-build-env.sh
+```
+
+Or manually add the layer:
+
+```bash
+cd ~/yocto-workspace/poky
+source oe-init-build-env build
+bitbake-layers add-layer ../../meta-application
+```
+
+Verify with:
+
+```bash
+bitbake-layers show-layers | grep meta-application
+```
+
+### Missing HOSTTOOLS Error
+
+**Error Message:**
+```
+ERROR: The following required tools (as specified by HOSTTOOLS) appear to be unavailable in PATH, 
+please install them in order to proceed: chrpath cpio diffstat pzstd
+```
+
+**Solution:**
+
+Install the missing tools:
+
+```bash
+sudo apt-get update
+sudo apt-get install -y chrpath cpio diffstat
+```
+
+For `pzstd` (parallel zstandard compression):
+- **Ubuntu 24.04+**: Available as `pzstd`
+  ```bash
+  sudo apt-get install -y pzstd
+  ```
+
+- **Older Ubuntu versions**: May need to install `zstandard` package instead
+  ```bash
+  sudo apt-get install -y zstandard
+  ```
+
+If `pzstd` is not available in your distribution, the Yocto build should still work with the basic compression tools installed.
+
+### Bitbake Command Not Found
+
+**Error Message:**
+```
+bash: bitbake: command not found
+```
+
+**Solution:**
+
+Make sure you've sourced the Yocto environment setup script:
+
+```bash
+cd ~/yocto-workspace/poky
+source oe-init-build-env build
+```
+
+This script sets up all necessary environment variables and adds bitbake to your PATH.
+
+### Repo Sync Issues
+
+**Problem:** `repo sync` fails or hangs
+
+**Solution:**
+
+Check your network connection and retry:
+
+```bash
+cd ~/yocto-workspace
+repo sync --force-sync
+```
+
+For debugging, check the manifest:
+```bash
+repo manifest -r
+```
 
 ## To be continued...
 
