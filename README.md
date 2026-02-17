@@ -428,7 +428,7 @@ For `pzstd` (parallel zstandard compression):
 
 If `pzstd` is not available in your distribution, the Yocto build should still work with the basic compression tools installed.
 
-### zstd and quilt-native Error
+### HOSTTOOLS Error: zstd
 
 Install the missing tools:
 
@@ -459,6 +459,38 @@ Adjust the Compression Threading (The "Codespace Special")
 BB_NUMBER_THREADS = "2"
 PARALLEL_MAKE = "-j 2"
 ZSTD_THREADS = "1"
+```
+
+Identify the Imposter
+Run these three commands to find out where this "fake" zstd is hiding:
+```bash
+which zstd
+alias zstd
+zstd --version
+# /opt/conda/bin/zstd
+# bash: alias: zstd: not found
+# *** Zstandard CLI (64-bit) v1.5.5, by Yann Collet ***
+```
+
+Yocto creates "Shared State" packages so you don't have to rebuild everything from scratch. It uses a specific task flow to archive these files.
+- Task Finish: The do_recipe_qa finishes.
+- SState Archive: Yocto calls tar which calls zstd.
+- The Interception: Your Codespace environment sees the zstd call and redirects it to a script that looks like this: zstd $@; echo "Press enter to continue"; read.
+- The Crash: Because Bitbake isn't an interactive terminal, the read command fails or hangs, causing the tar command to return Error 2.
+
+However, In GitHub Codespaces, the Conda environment often pre-installs its own versions of command-line tools. The Conda version of zstd is likely conflicting with how the Yocto build system (which expects the standard Ubuntu/system version) passes arguments. The "Press enter to continue" message is a classic symptom of a Conda wrapper script failing in a non-interactive shell.
+
+Fix:
+- Path Fix
+Run this in your terminal before you run source oe-init-build-env:
+```bash
+export PATH=/usr/bin:/bin:/usr/sbin:/sbin:$PATH
+```
+- The "Nuclear" Option
+If the path fix doesn't work, we can force Yocto to ignore zstd for packaging entirely. Add this to your conf/local.conf
+```bash
+# Force Yocto to use gzip for sstate to bypass the broken Conda zstd tool
+SSTATE_ZSTD_COMPRESSION = "0"
 ```
 
 ### Bitbake Command Not Found
