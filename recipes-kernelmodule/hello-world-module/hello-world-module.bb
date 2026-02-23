@@ -5,6 +5,9 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/meta/files/common-licenses/MIT;md5=0835ad
 
 inherit module
 
+# Auto-load the module at boot
+KERNEL_MODULE_AUTOLOAD += "hello_world"
+
 SRC_URI = "file://hello_world.c \
            file://Makefile \
           "

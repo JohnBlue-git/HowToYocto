@@ -317,7 +317,7 @@ The `build/tmp/` directory contains build artifacts:
 For qemux86-64 machine:
 
 ```bash
-sudo runqemu qemux86-64 nographic
+sudo runqemu qemux86-64 nographic slirp
 
 # To shutdown:
 shutdown -h now
