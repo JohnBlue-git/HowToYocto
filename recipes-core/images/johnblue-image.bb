@@ -15,6 +15,7 @@ IMAGE_INSTALL:append = " \
     hellorust \
     hellotarball \
     hello-world-module \
+    simulated-led-module \
 "
 
 # Optional: Set root password (empty for no password)
