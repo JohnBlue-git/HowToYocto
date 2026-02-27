@@ -10,10 +10,11 @@ S = "${WORKDIR}/src/${GO_IMPORT}"
 
 do_compile() {
     export GO111MODULE=off
-    ${GO} build -v -o hellogolang main.go
+    cd ${S}
+    ${GO} build -v -o ${B}/hellogolang .
 }
 
 do_install() {
     install -d ${D}${bindir}
-    install -m 0755 hellogolang ${D}${bindir}/hellogolang
+    install -m 0755 ${B}/hellogolang ${D}${bindir}/hellogolang
 }
