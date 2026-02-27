@@ -12,8 +12,9 @@ IMAGE_INSTALL:append = " \
     hellofetch \
     hellomake \
     hellomeson \
-    hellorust \
     hellotarball \
+    hellorust \
+    hellogolang \
     hello-world-module \
     simulated-led-module \
 "

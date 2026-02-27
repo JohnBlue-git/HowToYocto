@@ -275,6 +275,10 @@ meta-application/
     ├── hellotarball
     │   ├── files -> ../files
     │   └── hellotarball.bb
+    ├── hellogolang
+    │   ├── files/src/example.com/hellogolang/
+    │   │   └── main.go
+    │   └── hellogolang.bb
     └── hellorust
         ├── files
         │   └── hellorust/
